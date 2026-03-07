@@ -15,6 +15,9 @@ public class Main{
          * 
          * 
         */
+       MusicBox mbox2 = new MusicBox("T89FQ42", 'N', "Sunny Days", "Alex", 
+       "Summer Vibes", "Pop", "Warner Music", "Sony ATV");
+       mbox2.playSong(mbox2.getSongID(), mbox2.getPremiumSong(), 1);
         
 
     }
