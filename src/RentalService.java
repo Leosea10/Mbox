@@ -18,13 +18,17 @@ public class RentalService {
 
         ActiveRental activeRental = new ActiveRental(bikeID, emailAddress, tripStartTime);
         activeRentalsList.add(activeRental);
+        bikeService.logTripStart(bikeID, emailAddress, tripStartTime);
         return true;
     }
 
     public void endRental(String bikeID) {
-        removeActiveRental(bikeID);
+        ActiveRental removedRental = removeActiveRental(bikeID);
         bikeService.releaseBike(bikeID);
         if (bikeID != null) {
+            String userEmail = removedRental == null ? "unknown user" : removedRental.getUserEmail();
+            bikeService.logTripEnd(bikeID, userEmail, LocalDateTime.now());
+            bikeService.assignNextBikeRequestIfAny();
             System.out.println("Your trip has ended. Thank you for riding with us.");
         }
     }
@@ -48,9 +52,9 @@ public class RentalService {
         }
     }
 
-    private void removeActiveRental(String bikeID) {
+    private ActiveRental removeActiveRental(String bikeID) {
         if (bikeID == null) {
-            return;
+            return null;
         }
 
         Iterator<ActiveRental> iterator = activeRentalsList.iterator();
@@ -58,8 +62,10 @@ public class RentalService {
             ActiveRental rental = iterator.next();
             if (rental.getBikeID().equalsIgnoreCase(bikeID)) {
                 iterator.remove();
-                break;
+                return rental;
             }
         }
+
+        return null;
     }
 }

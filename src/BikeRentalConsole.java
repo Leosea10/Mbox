@@ -66,6 +66,6 @@ public class BikeRentalConsole {
             userRegistration.registration();
         }
 
-        return bikeService.validateLocation(location);
+        return bikeService.validateLocation(location, emailAddress);
     }
 }
