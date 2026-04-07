@@ -18,22 +18,32 @@ public class BikeRentalConsole {
     }
 
     public void simulateApplication() {
-        simulateApplicationInput();
+        simulateApplicationInput(null);
     }
 
-    private void simulateApplicationInput() {
-        System.out.println("This is the simulation of the e-bike rental process.");
-        System.out.print("Are you a registered user? (true/false): ");
-        if (!scanner.hasNextBoolean()) {
-            scanner.nextLine();
-            System.out.println("Invalid input. Please enter true or false.");
-            return;
-        }
-        isRegisteredUser = scanner.nextBoolean();
-        scanner.nextLine();
+    public void simulateApplication(RegisteredUsers user) {
+        simulateApplicationInput(user);
+    }
 
-        System.out.print("Enter your email address: ");
-        emailAddress = scanner.nextLine();
+    private void simulateApplicationInput(RegisteredUsers user) {
+        System.out.println("This is the simulation of the e-bike rental process.");
+        if (user != null) {
+            isRegisteredUser = true;
+            emailAddress = user.getEmailAddress();
+            System.out.println("Using registered user: " + emailAddress);
+        } else {
+            System.out.print("Are you a registered user? (true/false): ");
+            if (!scanner.hasNextBoolean()) {
+                scanner.nextLine();
+                System.out.println("Invalid input. Please enter true or false.");
+                return;
+            }
+            isRegisteredUser = scanner.nextBoolean();
+            scanner.nextLine();
+
+            System.out.print("Enter your email address: ");
+            emailAddress = scanner.nextLine();
+        }
 
         System.out.print("Enter your location: ");
         location = scanner.nextLine();
@@ -46,7 +56,7 @@ public class BikeRentalConsole {
         }
 
         System.out.println("Simulating e-bike reservation...");
-        rentalService.startRental(bikeID, emailAddress);
+        rentalService.startRental(bikeID, emailAddress, user);
 
         System.out.println("Displaying the active rentals...");
         rentalService.viewActiveRentals();

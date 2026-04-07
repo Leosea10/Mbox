@@ -30,7 +30,10 @@ public class AdminPanel {
             scanner.nextLine();
 
             if (choice == 1) {
-                userService.addNewUsers();
+                RegisteredUsers newUser = userService.addNewUsers();
+                if (newUser != null) {
+                    bikeRentalConsole.simulateApplication(newUser);
+                }
             } else if (choice == 2) {
                 userService.viewRegisteredUsers();
             } else if (choice == 3) {

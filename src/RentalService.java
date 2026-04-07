@@ -3,6 +3,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class RentalService {
+    private static final double BASE_FARE = 3.0;
     private final LinkedList<ActiveRental> activeRentalsList = new LinkedList<>();
     private final BikeService bikeService;
 
@@ -11,12 +12,16 @@ public class RentalService {
     }
 
     public boolean startRental(String bikeID, String emailAddress) {
+        return startRental(bikeID, emailAddress, null);
+    }
+
+    public boolean startRental(String bikeID, String emailAddress, RegisteredUsers user) {
         LocalDateTime tripStartTime = bikeService.reserveBike(bikeID);
         if (tripStartTime == null) {
             return false;
         }
 
-        ActiveRental activeRental = new ActiveRental(bikeID, emailAddress, tripStartTime);
+        ActiveRental activeRental = new ActiveRental(bikeID, emailAddress, user, tripStartTime);
         activeRentalsList.add(activeRental);
         bikeService.logTripStart(bikeID, emailAddress, tripStartTime);
         return true;
@@ -30,6 +35,13 @@ public class RentalService {
             bikeService.logTripEnd(bikeID, userEmail, LocalDateTime.now());
             bikeService.assignNextBikeRequestIfAny();
             System.out.println("Your trip has ended. Thank you for riding with us.");
+        }
+
+        if (removedRental != null && removedRental.getUser() != null) {
+            double fare = removedRental.getUser().calculateFare(BASE_FARE);
+            System.out.println("Trip fare: $" + fare);
+            System.out.print("User type: ");
+            removedRental.getUser().displayUserType();
         }
     }
 

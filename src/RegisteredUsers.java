@@ -103,6 +103,14 @@ public class RegisteredUsers {
         this.lastThreeTrips = lastThreeTrips;
     }
 
+    public double calculateFare(double baseFare) {
+        return baseFare;
+    }
+
+    public void displayUserType() {
+        System.out.println("RegularUser");
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

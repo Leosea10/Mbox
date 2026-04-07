@@ -11,16 +11,17 @@ public class UserService {
         this.scanner = scanner;
     }
 
-    public void addNewUsers() {
+    public RegisteredUsers addNewUsers() {
         System.out.print("How many users would you like to add? ");
         if (!scanner.hasNextInt()) {
             scanner.nextLine();
             System.out.println("Invalid number. Returning to menu.");
-            return;
+            return null;
         }
         int userCount = scanner.nextInt();
         scanner.nextLine();
 
+        RegisteredUsers lastCreatedUser = null;
         for (int i = 0; i < userCount; i++) {
             System.out.println("Entering details for user " + (i + 1) + ":");
 
@@ -83,20 +84,38 @@ public class UserService {
                 lastThreeTrips[t] = tripInfo.toString();
             }
 
-            RegisteredUsers user = new RegisteredUsers(
-                    fullName,
-                    emailAddress,
-                    dateOfBirth,
-                    cardNumber,
-                    cardExpiryDate,
-                    cardProvider,
-                    cvv,
-                    userType,
-                    lastThreeTrips
-            );
+            RegisteredUsers user;
+            if (userType.equalsIgnoreCase("VIP")) {
+                user = new VIPUser(
+                        fullName,
+                        emailAddress,
+                        dateOfBirth,
+                        cardNumber,
+                        cardExpiryDate,
+                        cardProvider,
+                        cvv,
+                        userType,
+                        lastThreeTrips
+                );
+            } else {
+                user = new RegularUser(
+                        fullName,
+                        emailAddress,
+                        dateOfBirth,
+                        cardNumber,
+                        cardExpiryDate,
+                        cardProvider,
+                        cvv,
+                        userType,
+                        lastThreeTrips
+                );
+            }
 
             registeredUsersList.add(user);
+            lastCreatedUser = user;
         }
+
+        return lastCreatedUser;
     }
 
     public void viewRegisteredUsers() {
